@@ -14,18 +14,22 @@ import {
  * Internal dependencies
  */
 import Header from '../src/Header';
+import Footer from '../src/Footer';
 import Layout from '../src/Layout';
 import AddNoteCard from '../src/AddNoteCard';
 
-function Notes() {
+function Home() {
   return (
     <View>
       <Layout>
-        <Header text="Notesify" />
+        <SafeAreaView>
+          <Header text="papr" />
+        </SafeAreaView>
         <View style={styles.container}>
           <AddNoteCard />
         </View>
       </Layout>
+      <Footer />
     </View>
   );
 }
@@ -45,4 +49,4 @@ const styles = StyleSheet.create({
   addIcon: {},
 });
 
-export default Notes;
+export default Home;
