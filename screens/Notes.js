@@ -1,4 +1,6 @@
 import React from 'react';
+import {GlobalStyles} from '../src/GlobalStyles';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -13,17 +15,34 @@ import {
  */
 import Header from '../src/Header';
 import Layout from '../src/Layout';
-import AddNoteButton from '../src/AddNoteButton';
+import AddNoteCard from '../src/AddNoteCard';
 
 function Notes() {
   return (
     <View>
       <Layout>
-        <Header />
-        <AddNoteButton />
+        <Header text="Notesify" />
+        <View style={styles.container}>
+          <AddNoteCard />
+        </View>
       </Layout>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  view: {},
+  text: {
+    fontSize: 17,
+    fontFamily: GlobalStyles.customFontFamily.fontFamily,
+    fontWeight: '500',
+  },
+  addIcon: {},
+});
 
 export default Notes;
