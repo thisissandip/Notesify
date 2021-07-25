@@ -3,8 +3,12 @@ import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {GlobalStyles} from './GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BottomDrawer from './BottomDrawer';
+import {useNavigation} from '@react-navigation/native';
+import {LEFTPADDING, RIGHTPADDING} from './constants';
 
 function Footer() {
+  const navigation = useNavigation();
+
   const [isFooterOpen, setFooterOpen] = useState(false);
   const dummyTags = [
     {tagname: 'todos'},
@@ -27,7 +31,9 @@ function Footer() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity activeOpacity={0.4}>
+        <TouchableOpacity
+          activeOpacity={0.4}
+          onPress={() => navigation.navigate('Note')}>
           <View style={styles.addBtn}>
             <Icon name="add-outline" size={30} color="#ffffff" />
           </View>
@@ -51,8 +57,8 @@ function Footer() {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: LEFTPADDING,
+    paddingRight: RIGHTPADDING,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -66,7 +72,7 @@ const styles = StyleSheet.create({
   addBtn: {
     marginTop: Platform.OS === 'ios' ? -80 : 0,
     backgroundColor: '#000000',
-    borderRadius: 50,
+    borderRadius: 100,
     padding: 10,
     shadowColor: '#000',
     shadowOffset: {

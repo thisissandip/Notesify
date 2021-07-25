@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import {GlobalStyles} from './GlobalStyles';
+import {LEFTPADDING, RIGHTPADDING} from './constants';
 
 function Header({text}) {
   return (
@@ -22,10 +23,11 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 70,
-    backgroundColor: 'white',
     marginBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingLeft: LEFTPADDING,
+    paddingRight: RIGHTPADDING,
   },
   text: {
     fontFamily: GlobalStyles.customFontFamily.fontFamily,

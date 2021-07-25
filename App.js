@@ -21,10 +21,12 @@ import {
   View,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {enableScreens} from 'react-native-screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
+enableScreens();
 import Home from './screens/Home';
+import Note from './screens/Note';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -45,6 +47,11 @@ const App = () => {
         <Stack.Screen
           name="Home"
           component={Home}
+          options={{header: () => null}}
+        />
+        <Stack.Screen
+          name="Note"
+          component={Note}
           options={{header: () => null}}
         />
       </Stack.Navigator>

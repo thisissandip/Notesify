@@ -13,12 +13,14 @@ import {
 import {GlobalStyles} from './GlobalStyles';
 
 function BottomDrawer({tags, isFooterOpen, setFooterOpen}) {
-  const bottomValue = useRef(new Animated.Value(20)).current;
+  const bottomValue = useRef(
+    new Animated.Value(Dimensions.get('screen').height),
+  ).current;
 
   const SlideUp = () => {
     Animated.timing(bottomValue, {
       toValue: 0,
-      duration: 0.4 * 1000,
+      duration: 0.5 * 1000,
       useNativeDriver: true,
     }).start();
   };
@@ -70,6 +72,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
+    /*    backgroundColor: 'green', */
   },
   remaining: {
     flex: 1,
@@ -77,14 +80,15 @@ const styles = StyleSheet.create({
   },
   container: {
     position: 'absolute',
-    width: '100%',
+    width: '97%',
     paddingTop: 20,
     paddingBottom: Platform.OS === 'ios' ? 30 : 20,
-    right: 0,
-    left: 0,
     bottom: 0,
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    borderTopEndRadius: 20,
+    borderTopStartRadius: 20,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
     elevation: 0,
     borderWidth: Platform.OS === 'android' ? 1 : 0,
     borderColor: '#ccc',
-    backgroundColor: '#ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
   },
   flatlist: {
     width: '90%',

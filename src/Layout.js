@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {GlobalStyles} from './GlobalStyles';
+import {LEFTPADDING, RIGHTPADDING} from './constants';
 
 function Layout({children}) {
   return <View style={[styles.container]}>{children}</View>;
@@ -11,8 +12,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: GlobalStyles.primaryBackgroundColor.backgroundColor,
-    paddingLeft: 25,
-    paddingRight: 25,
+    /*paddingLeft: LEFTPADDING,
+    paddingRight: RIGHTPADDING, */
   },
 });
 
