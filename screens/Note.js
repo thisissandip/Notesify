@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TextInput,
   Platform,
+  AppState,
   Dimensions,
   BackHandler,
 } from 'react-native';
@@ -19,21 +20,28 @@ import {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {isEmpty} from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {elastic} from 'react-native/Libraries/Animated/Easing';
+import {v4 as uuidv4} from 'uuid';
 
 function Note() {
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
+  const [NoteId, setNoteId] = useState(uuidv4());
 
   const navigation = useNavigation();
 
   useEffect(() => {
     navigation.addListener('beforeRemove', saveData);
-  }, [navigation, note, title]);
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      navigation.removeListener('beforeRemove', saveData);
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, [note, title]);
 
   useEffect(() => {
     const getExistingNotes = async () => {
-      /*   await AsyncStorage.removeItem('papr_notes'); */
+      /* await AsyncStorage.removeItem('papr_notes'); */
       const allnotes = await AsyncStorage.getItem('papr_notes');
       console.warn(JSON.parse(allnotes));
       if (!isEmpty(allnotes)) {
@@ -46,21 +54,36 @@ function Note() {
 
   const saveData = async () => {
     if (!isEmpty(title) && !isEmpty(note)) {
-      const allnotes = await AsyncStorage.getItem('papr_notes');
+      const allnotesdata = await AsyncStorage.getItem('papr_notes');
+      const allnotes = JSON.parse(allnotesdata);
+
       const currentNote = {
+        id: NoteId,
         title,
         content: note,
       };
       let newallnotes = [];
-      if (!isEmpty(allnotes)) {
-        newallnotes = JSON.parse(allnotes)?.map(note => note);
+      if (isEmpty(allnotes)) {
+        // if no notes are there then save the first note
         newallnotes.push(currentNote);
+        const notes = JSON.stringify(newallnotes);
+        await AsyncStorage.setItem('papr_notes', notes);
       } else {
-        newallnotes.push(currentNote);
+        // check if the note is already saved, if it is then don't save again
+        let isNoteSaved = allnotes?.filter(note => note.id === NoteId);
+        if (isEmpty(isNoteSaved)) {
+          newallnotes = [...allnotes];
+          newallnotes.push(currentNote);
+          const notes = JSON.stringify(newallnotes);
+          await AsyncStorage.setItem('papr_notes', notes);
+        }
       }
-      const notes = JSON.stringify(newallnotes);
+    }
+  };
 
-      await AsyncStorage.setItem('papr_notes', notes);
+  const handleAppStateChange = nextAppState => {
+    if (nextAppState === 'background' || nextAppState === 'inactive') {
+      saveData();
     }
   };
 
