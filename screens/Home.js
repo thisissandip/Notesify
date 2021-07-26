@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {GlobalStyles} from '../src/GlobalStyles';
 
 import {
+  FlatList,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -11,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MasonryList from '@react-native-seoul/masonry-list';
 /**
  * Internal dependencies
  */
@@ -22,6 +24,8 @@ import {isEmpty} from 'lodash';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchNotes} from '../src/redux/actions';
+import NotePreview from '../src/NotePreview';
+import {LIGHT_BG_COLOR, LEFTPADDING, RIGHTPADDING} from '../src/constants';
 
 function Home() {
   const navigation = useNavigation();
@@ -31,7 +35,7 @@ function Home() {
 
   useEffect(() => {
     const getExistingNotes = async () => {
-      /*  await AsyncStorage.removeItem('papr_notes'); */
+      /*      await AsyncStorage.removeItem('papr_notes'); */
       const allnotesdata = await AsyncStorage.getItem('papr_notes');
       const allnotes = JSON.parse(allnotesdata);
 
@@ -53,9 +57,23 @@ function Home() {
         <SafeAreaView>
           <Header text="papr" />
         </SafeAreaView>
-        <View style={styles.container}>
-          {isEmpty(notes) && <AddNoteCard />}
-        </View>
+
+        {isEmpty(notes) ? (
+          <View style={styles.container}>
+            <AddNoteCard />
+          </View>
+        ) : (
+          <View style={styles.flatlist_container}>
+            <FlatList
+              contentContainerStyle={{alignItems: 'center'}}
+              data={notes}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item}) => <NotePreview note={item} />}
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        )}
       </Layout>
       <Footer />
     </View>
@@ -67,14 +85,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: LIGHT_BG_COLOR,
   },
-  view: {},
   text: {
     fontSize: 17,
     fontFamily: GlobalStyles.customFontFamily.fontFamily,
     fontWeight: '500',
   },
-  addIcon: {},
+  flatlist_container: {
+    paddingTop: 10,
+    flex: 1,
+    paddingLeft: 10,
+    paddingRight: 10,
+    /*    backgroundColor: 'yellow', */
+  },
 });
 
 export default Home;

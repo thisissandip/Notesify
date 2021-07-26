@@ -39,7 +39,11 @@ function Footer() {
         {!isEmpty(notes) && (
           <TouchableOpacity
             activeOpacity={0.4}
-            onPress={() => navigation.navigate('Note')}>
+            onPress={() =>
+              navigation.navigate('Note', {
+                noteToEdit: null,
+              })
+            }>
             <View style={styles.addBtn}>
               <Icon name="add-outline" size={30} color="#ffffff" />
             </View>

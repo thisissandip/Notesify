@@ -24,13 +24,19 @@ import {v4 as uuidv4} from 'uuid';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchNotes} from '../src/redux/actions';
 
-function Note() {
+function Note({route}) {
+  const {noteToEdit} = route.params;
+
   const dispatch = useDispatch();
   const notes = useSelector(state => state.noteR.notes);
 
-  const [title, setTitle] = useState('');
-  const [note, setNote] = useState('');
-  const [NoteId, setNoteId] = useState(uuidv4());
+  const [title, setTitle] = useState(noteToEdit?.title ? noteToEdit.title : '');
+  const [note, setNote] = useState(
+    isEmpty(noteToEdit) ? '' : noteToEdit.content,
+  );
+  const [NoteId, setNoteId] = useState(
+    isEmpty(noteToEdit) ? uuidv4() : noteToEdit.id,
+  );
 
   const navigation = useNavigation();
 
@@ -46,6 +52,7 @@ function Note() {
 
   useEffect(() => {
     console.warn(notes);
+    console.warn('edit', noteToEdit);
   }, []);
 
   const saveData = async () => {
@@ -65,13 +72,29 @@ function Note() {
         const notes = JSON.stringify(newallnotes);
         await AsyncStorage.setItem('papr_notes', notes);
       } else {
-        // check if the note is already saved, if it is then don't save again
+        // check if the note is already saved, if it is then don't
+        // save again just update the exisiting note
         let isNoteSaved = allnotes?.filter(note => note.id === NoteId);
         if (isEmpty(isNoteSaved)) {
           newallnotes = [...allnotes];
           newallnotes.push(currentNote);
           const notes = JSON.stringify(newallnotes);
           await AsyncStorage.setItem('papr_notes', notes);
+        } else {
+          // in case of localstorage - remove the note and add a new one with same id
+          let updatednotes = allnotes?.map(item => {
+            if (item.id !== NoteId) {
+              return item;
+            } else {
+              return {
+                ...item,
+                title: title,
+                content: note,
+              };
+            }
+          });
+          const newnotes = JSON.stringify(updatednotes);
+          await AsyncStorage.setItem('papr_notes', newnotes);
         }
       }
 
@@ -114,6 +137,7 @@ function Title({title, setTitle}) {
   return (
     <View>
       <TextInput
+        value={title}
         style={titlestyles.titleInput}
         onChangeText={value => setTitle(value)}
         placeholder="Title"
@@ -138,6 +162,7 @@ function NoteInput({note, setNote}) {
   return (
     <View>
       <TextInput
+        value={note}
         style={noteinputstyles.input}
         onChangeText={value => setNote(value)}
         placeholder="Start writing your amazing idea"

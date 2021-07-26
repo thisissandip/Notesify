@@ -11,7 +11,11 @@ function AddNoteButton() {
       <TouchableOpacity
         style={styles.container}
         activeOpacity={0.6}
-        onPress={() => navigation.navigate('Note')}>
+        onPress={() =>
+          navigation.navigate('Note', {
+            noteToEdit: null,
+          })
+        }>
         <View style={styles.view}>
           <Icon
             name="add-outline"

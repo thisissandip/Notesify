@@ -24,6 +24,8 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {enableScreens} from 'react-native-screens';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {LIGHT_BG_COLOR} from './src/constants';
+
 enableScreens();
 import Home from './screens/Home';
 import Note from './screens/Note';
@@ -66,6 +68,5 @@ const App = () => {
     </Provider>
   );
 };
-const styles = StyleSheet.create({});
 
 export default App;

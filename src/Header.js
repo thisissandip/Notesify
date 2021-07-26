@@ -9,7 +9,12 @@ import {
   View,
 } from 'react-native';
 import {GlobalStyles} from './GlobalStyles';
-import {LEFTPADDING, RIGHTPADDING} from './constants';
+import {
+  LEFTPADDING,
+  RIGHTPADDING,
+  HEADER_HEIGHT,
+  LIGHT_BG_COLOR,
+} from './constants';
 
 function Header({text}) {
   return (
@@ -22,12 +27,12 @@ function Header({text}) {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 70,
-    marginBottom: 10,
+    height: HEADER_HEIGHT,
     alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: LEFTPADDING,
     paddingRight: RIGHTPADDING,
+    backgroundColor: LIGHT_BG_COLOR,
   },
   text: {
     fontFamily: GlobalStyles.customFontFamily.fontFamily,
