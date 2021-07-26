@@ -14,12 +14,11 @@ import {useEffect} from 'react';
 function NotePreview({note}) {
   const navigation = useNavigation();
 
-  useEffect(() => {
-    console.log('content', note.content);
-  }, []);
-
   return (
     <TouchableWithoutFeedback
+      onLongPress={() => {
+        console.log('do something');
+      }}
       onPress={() =>
         navigation.navigate('Note', {
           noteToEdit: note,
@@ -41,18 +40,17 @@ const styles = StyleSheet.create({
     marginBottom: 13,
     height: 'auto',
     maxHeight: NOTE_PREVIEW_MAX_HEIGHT,
+    overflow: 'hidden',
     backgroundColor: '#fff',
     borderRadius: 10,
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 15,
+    padding: 15,
     borderWidth: 1,
     borderColor: '#000',
   },
   title: {
     width: '100%',
     fontFamily: 'Inter-Black',
-    fontSize: 25,
+    fontSize: 21,
     paddingVertical: 0,
     marginBottom: 10,
   },
@@ -60,8 +58,8 @@ const styles = StyleSheet.create({
     width: '100%',
     fontFamily: 'Inter-Regular',
     paddingVertical: 0,
-    fontSize: 18,
-    marginBottom: 15,
+    fontSize: 16,
+    maxHeight: NOTE_PREVIEW_MAX_HEIGHT - 85,
   },
 });
 

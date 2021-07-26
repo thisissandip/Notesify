@@ -25,7 +25,12 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchNotes} from '../src/redux/actions';
 import NotePreview from '../src/NotePreview';
-import {LIGHT_BG_COLOR, LEFTPADDING, RIGHTPADDING} from '../src/constants';
+import {
+  LIGHT_BG_COLOR,
+  LEFTPADDING,
+  RIGHTPADDING,
+  FOOTER_HEIGHT,
+} from '../src/constants';
 
 function Home() {
   const navigation = useNavigation();
@@ -35,7 +40,7 @@ function Home() {
 
   useEffect(() => {
     const getExistingNotes = async () => {
-      /*      await AsyncStorage.removeItem('papr_notes'); */
+      /* await AsyncStorage.removeItem('papr_notes'); */
       const allnotesdata = await AsyncStorage.getItem('papr_notes');
       const allnotes = JSON.parse(allnotesdata);
 
@@ -54,24 +59,29 @@ function Home() {
   return (
     <View>
       <Layout>
-        <SafeAreaView>
-          <Header text="papr" />
-        </SafeAreaView>
-
         {isEmpty(notes) ? (
-          <View style={styles.container}>
-            <AddNoteCard />
-          </View>
+          <>
+            <SafeAreaView>
+              <Header text="papr" />
+            </SafeAreaView>
+            <View style={styles.container}>
+              <AddNoteCard />
+            </View>
+          </>
         ) : (
           <View style={styles.flatlist_container}>
-            <FlatList
-              contentContainerStyle={{alignItems: 'center'}}
-              data={notes}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item}) => <NotePreview note={item} />}
-              bounces={false}
-              showsVerticalScrollIndicator={false}
-            />
+            <SafeAreaView>
+              <FlatList
+                ListHeaderComponent={() => <Header text="papr" />}
+                contentContainerStyle={{alignItems: 'center'}}
+                data={notes}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item}) => <NotePreview note={item} />}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+                ListFooterComponent={<View style={{height: 20}} />}
+              />
+            </SafeAreaView>
           </View>
         )}
       </Layout>
@@ -93,11 +103,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   flatlist_container: {
-    paddingTop: 10,
     flex: 1,
     paddingLeft: 10,
     paddingRight: 10,
-    /*    backgroundColor: 'yellow', */
+    marginBottom: FOOTER_HEIGHT,
+    /* backgroundColor: 'yellow', */
   },
 });
 

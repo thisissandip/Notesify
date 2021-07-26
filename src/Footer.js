@@ -4,7 +4,12 @@ import {GlobalStyles} from './GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BottomDrawer from './BottomDrawer';
 import {useNavigation} from '@react-navigation/native';
-import {LEFTPADDING, RIGHTPADDING} from './constants';
+import {
+  LEFTPADDING,
+  LIGHT_BG_COLOR,
+  RIGHTPADDING,
+  FOOTER_HEIGHT,
+} from './constants';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchNotes} from '../src/redux/actions';
 import {isEmpty} from 'lodash';
@@ -74,14 +79,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    height: 70,
+    height: FOOTER_HEIGHT,
     bottom: 0,
     right: 0,
     left: 0,
-    /* backgroundColor: 'blue', */
+    backgroundColor: LIGHT_BG_COLOR,
+    /*     backgroundColor: 'pink', */
   },
   addBtn: {
-    marginTop: Platform.OS === 'ios' ? -80 : 0,
+    marginTop: Platform.OS === 'ios' ? -60 : 0,
     backgroundColor: '#000000',
     borderRadius: 100,
     padding: 10,
@@ -94,7 +100,6 @@ const styles = StyleSheet.create({
     shadowRadius: 18,
     elevation: 0,
     borderWidth: Platform.OS === 'android' ? 1 : 0,
-    borderColor: '#000',
   },
 });
 

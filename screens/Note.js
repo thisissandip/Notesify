@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet,
   Text,
+  ScrollView,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -114,10 +115,13 @@ function Note({route}) {
         <SafeAreaView>
           <NoteHeader saveData={saveData} />
         </SafeAreaView>
-        <View style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          showsVerticalScrollIndicator={false}>
           <Title title={title} setTitle={setTitle} />
           <NoteInput note={note} setNote={setNote} />
-        </View>
+          <View style={{height: 80}} />
+        </ScrollView>
       </Layout>
     </View>
   );
@@ -163,6 +167,7 @@ function NoteInput({note, setNote}) {
     <View>
       <TextInput
         value={note}
+        scrollEnabled={false}
         style={noteinputstyles.input}
         onChangeText={value => setNote(value)}
         placeholder="Start writing your amazing idea"

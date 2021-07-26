@@ -27,9 +27,11 @@ function NoteHeader({saveData}) {
       <TouchableOpacity activeOpacity={0.3} onPress={() => handleBack()}>
         <Icon name="arrow-back-outline" size={23} color="#636363" />
       </TouchableOpacity>
-      {/*    <TouchableOpacity activeOpacity={0.3}>
-        <Icon name="ellipsis-horizontal-outline" size={23} color="#636363" />
-      </TouchableOpacity> */}
+      {
+        <TouchableOpacity activeOpacity={0.3}>
+          <Icon name="trash-outline" size={23} color="#636363" />
+        </TouchableOpacity>
+      }
     </View>
   );
 }

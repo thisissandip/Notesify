@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: HEADER_HEIGHT,
+    marginBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: LEFTPADDING,
