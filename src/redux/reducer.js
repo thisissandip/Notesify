@@ -6,11 +6,16 @@ const initialstate = {
 
 export default NoteReducer = (state = initialstate, action) => {
   switch (action.type) {
+    case FETCH_NOTES:
+      return {
+        ...state,
+        notes: [...action.payload],
+      };
     case UPDATE_NOTES:
       let newnotes = [...state.notes, action.payload];
       return {
-        notes: newnotes,
         ...state,
+        notes: newnotes,
       };
     default:
       return state;

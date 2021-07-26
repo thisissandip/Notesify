@@ -21,8 +21,13 @@ import {useNavigation} from '@react-navigation/native';
 import {isEmpty} from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {v4 as uuidv4} from 'uuid';
+import {useSelector, useDispatch} from 'react-redux';
+import {fetchNotes} from '../src/redux/actions';
 
 function Note() {
+  const dispatch = useDispatch();
+  const notes = useSelector(state => state.noteR.notes);
+
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [NoteId, setNoteId] = useState(uuidv4());
@@ -40,16 +45,7 @@ function Note() {
   }, [note, title]);
 
   useEffect(() => {
-    const getExistingNotes = async () => {
-      /* await AsyncStorage.removeItem('papr_notes'); */
-      const allnotes = await AsyncStorage.getItem('papr_notes');
-      console.warn(JSON.parse(allnotes));
-      if (!isEmpty(allnotes)) {
-        console.warn(JSON.parse(allnotes));
-      }
-    };
-
-    getExistingNotes();
+    console.warn(notes);
   }, []);
 
   const saveData = async () => {
@@ -78,6 +74,8 @@ function Note() {
           await AsyncStorage.setItem('papr_notes', notes);
         }
       }
+
+      dispatch(fetchNotes());
     }
   };
 

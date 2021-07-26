@@ -5,9 +5,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import BottomDrawer from './BottomDrawer';
 import {useNavigation} from '@react-navigation/native';
 import {LEFTPADDING, RIGHTPADDING} from './constants';
+import {useSelector, useDispatch} from 'react-redux';
+import {fetchNotes} from '../src/redux/actions';
+import {isEmpty} from 'lodash';
 
-function Footer({notes}) {
+function Footer() {
   const navigation = useNavigation();
+
+  const notes = useSelector(state => state.noteR.notes);
 
   const [isFooterOpen, setFooterOpen] = useState(false);
   const dummyTags = [
@@ -31,7 +36,7 @@ function Footer({notes}) {
           </TouchableOpacity>
         </View>
 
-        {!notes && (
+        {!isEmpty(notes) && (
           <TouchableOpacity
             activeOpacity={0.4}
             onPress={() => navigation.navigate('Note')}>

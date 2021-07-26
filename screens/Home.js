@@ -20,22 +20,32 @@ import Layout from '../src/Layout';
 import AddNoteCard from '../src/AddNoteCard';
 import {isEmpty} from 'lodash';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector, useDispatch} from 'react-redux';
+import {fetchNotes} from '../src/redux/actions';
 
 function Home() {
   const navigation = useNavigation();
-  const [myNotes, setMyNotes] = useState();
+  const dispatch = useDispatch();
+
+  const notes = useSelector(state => state.noteR.notes);
 
   useEffect(() => {
     const getExistingNotes = async () => {
-      /* await AsyncStorage.removeItem('papr_notes'); */
+      /*  await AsyncStorage.removeItem('papr_notes'); */
       const allnotesdata = await AsyncStorage.getItem('papr_notes');
       const allnotes = JSON.parse(allnotesdata);
-      setMyNotes(allnotes);
-      console.warn(allnotes);
+
+      if (!isEmpty(allnotes)) {
+        dispatch(fetchNotes());
+      }
     };
 
     getExistingNotes();
   }, [navigation]);
+
+  useEffect(() => {
+    console.log('notes', notes);
+  }, [notes]);
 
   return (
     <View>
@@ -44,10 +54,10 @@ function Home() {
           <Header text="papr" />
         </SafeAreaView>
         <View style={styles.container}>
-          {isEmpty(myNotes) && <AddNoteCard />}
+          {isEmpty(notes) && <AddNoteCard />}
         </View>
       </Layout>
-      <Footer notes={isEmpty(myNotes)} />
+      <Footer />
     </View>
   );
 }
