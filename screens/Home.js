@@ -74,7 +74,7 @@ function Home() {
               <FlatList
                 ListHeaderComponent={() => <Header text="papr" />}
                 contentContainerStyle={{alignItems: 'center'}}
-                data={notes}
+                data={notes.reverse()}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item}) => <NotePreview note={item} />}
                 bounces={false}

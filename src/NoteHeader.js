@@ -12,14 +12,30 @@ import {GlobalStyles} from './GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {LEFT_HEADER_PADDING, RIGHT_HEADER_PADDING} from './constants';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {fetchNotes} from './redux/actions';
 
-function NoteHeader({saveData}) {
+function NoteHeader({saveData, noteid}) {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   // save on back button from header
   const handleBack = () => {
     saveData();
     navigation.goBack();
+  };
+
+  const deleteNote = async () => {
+    navigation.goBack();
+    const allnotesdata = await AsyncStorage.getItem('papr_notes');
+    const allnotes = JSON.parse(allnotesdata);
+
+    const newnotes = allnotes.filter(item => item.id !== noteid);
+    const notes = JSON.stringify(newnotes);
+
+    await AsyncStorage.setItem('papr_notes', notes);
+    dispatch(fetchNotes());
   };
 
   return (
@@ -28,7 +44,7 @@ function NoteHeader({saveData}) {
         <Icon name="arrow-back-outline" size={23} color="#636363" />
       </TouchableOpacity>
       {
-        <TouchableOpacity activeOpacity={0.3}>
+        <TouchableOpacity activeOpacity={0.3} onPress={() => deleteNote()}>
           <Icon name="trash-outline" size={23} color="#636363" />
         </TouchableOpacity>
       }

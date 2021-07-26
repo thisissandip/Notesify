@@ -113,7 +113,7 @@ function Note({route}) {
     <View>
       <Layout>
         <SafeAreaView>
-          <NoteHeader saveData={saveData} />
+          <NoteHeader noteid={NoteId} saveData={saveData} />
         </SafeAreaView>
         <ScrollView
           style={styles.container}
