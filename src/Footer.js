@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {GlobalStyles} from './GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -6,7 +6,7 @@ import BottomDrawer from './BottomDrawer';
 import {useNavigation} from '@react-navigation/native';
 import {LEFTPADDING, RIGHTPADDING} from './constants';
 
-function Footer() {
+function Footer({notes}) {
   const navigation = useNavigation();
 
   const [isFooterOpen, setFooterOpen] = useState(false);
@@ -31,13 +31,15 @@ function Footer() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          activeOpacity={0.4}
-          onPress={() => navigation.navigate('Note')}>
-          <View style={styles.addBtn}>
-            <Icon name="add-outline" size={30} color="#ffffff" />
-          </View>
-        </TouchableOpacity>
+        {!notes && (
+          <TouchableOpacity
+            activeOpacity={0.4}
+            onPress={() => navigation.navigate('Note')}>
+            <View style={styles.addBtn}>
+              <Icon name="add-outline" size={30} color="#ffffff" />
+            </View>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity activeOpacity={0.3}>
           <View>

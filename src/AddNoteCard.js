@@ -2,11 +2,16 @@ import React from 'react';
 import {TouchableOpacity, StyleSheet, Text, View, Platform} from 'react-native';
 import {GlobalStyles} from './GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useNavigation} from '@react-navigation/native';
 
 function AddNoteButton() {
+  const navigation = useNavigation();
   return (
     <>
-      <TouchableOpacity style={styles.container} activeOpacity={0.6}>
+      <TouchableOpacity
+        style={styles.container}
+        activeOpacity={0.6}
+        onPress={() => navigation.navigate('Note')}>
         <View style={styles.view}>
           <Icon
             name="add-outline"

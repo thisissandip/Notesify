@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {GlobalStyles} from '../src/GlobalStyles';
 
 import {
@@ -10,6 +10,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 /**
  * Internal dependencies
  */
@@ -17,8 +18,25 @@ import Header from '../src/Header';
 import Footer from '../src/Footer';
 import Layout from '../src/Layout';
 import AddNoteCard from '../src/AddNoteCard';
+import {isEmpty} from 'lodash';
+import {useNavigation} from '@react-navigation/native';
 
 function Home() {
+  const navigation = useNavigation();
+  const [myNotes, setMyNotes] = useState();
+
+  useEffect(() => {
+    const getExistingNotes = async () => {
+      /* await AsyncStorage.removeItem('papr_notes'); */
+      const allnotesdata = await AsyncStorage.getItem('papr_notes');
+      const allnotes = JSON.parse(allnotesdata);
+      setMyNotes(allnotes);
+      console.warn(allnotes);
+    };
+
+    getExistingNotes();
+  }, [navigation]);
+
   return (
     <View>
       <Layout>
@@ -26,10 +44,10 @@ function Home() {
           <Header text="papr" />
         </SafeAreaView>
         <View style={styles.container}>
-          <AddNoteCard />
+          {isEmpty(myNotes) && <AddNoteCard />}
         </View>
       </Layout>
-      <Footer />
+      <Footer notes={isEmpty(myNotes)} />
     </View>
   );
 }

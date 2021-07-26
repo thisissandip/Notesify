@@ -28,6 +28,12 @@ enableScreens();
 import Home from './screens/Home';
 import Note from './screens/Note';
 
+import {Provider} from 'react-redux';
+
+import configureStore from './src/redux/store';
+
+const store = configureStore();
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const Stack = createStackNavigator();
@@ -37,27 +43,27 @@ const App = () => {
   };
 
   return (
-    <NavigationContainer>
-      <StatusBar
-        backgroundColor={Platform.OS === 'android' && 'white'}
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-      />
-
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{header: () => null}}
+    <Provider store={store}>
+      <NavigationContainer>
+        <StatusBar
+          backgroundColor={Platform.OS === 'android' && 'white'}
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         />
-        <Stack.Screen
-          name="Note"
-          component={Note}
-          options={{header: () => null}}
-        />
-      </Stack.Navigator>
 
-      {/*         <Home /> */}
-    </NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{header: () => null}}
+          />
+          <Stack.Screen
+            name="Note"
+            component={Note}
+            options={{header: () => null}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 const styles = StyleSheet.create({});
