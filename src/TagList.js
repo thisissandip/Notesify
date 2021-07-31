@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,10 +10,12 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
+import CheckBox from 'react-native-check-box';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {GlobalStyles} from './GlobalStyles';
 
-function BottomDrawer({tags, isFooterOpen, setFooterOpen}) {
+function TagList({isTagListOpen, setTagListOpen}) {
+  // Animation slide up and down
   const bottomValue = useRef(
     new Animated.Value(Dimensions.get('screen').height),
   ).current;
@@ -21,18 +23,18 @@ function BottomDrawer({tags, isFooterOpen, setFooterOpen}) {
   const SlideUp = () => {
     Animated.timing(bottomValue, {
       toValue: 0,
-      duration: 0.5 * 1000,
+      duration: 0.4 * 1000,
       useNativeDriver: true,
     }).start();
   };
 
   useEffect(() => {
-    if (isFooterOpen) {
+    if (isTagListOpen) {
       SlideUp();
     } else {
       SlideDown();
     }
-  }, [isFooterOpen]);
+  }, [isTagListOpen]);
 
   const SlideDown = () => {
     Animated.timing(bottomValue, {
@@ -42,33 +44,53 @@ function BottomDrawer({tags, isFooterOpen, setFooterOpen}) {
     }).start();
   };
 
+  // Dummy tags
+
+  const dummyTags = [
+    {tagname: 'todos'},
+    {tagname: 'notes'},
+    {tagname: 'meetings'},
+  ];
+
+  // array of selected tags
+
+  const [selectedTags, setSelectedTags] = useState(['todos']);
+
+  const handleCheckbox = tagname => {
+    if (selectedTags.includes(tagname)) {
+      // remove
+      setSelectedTags(selectedTags.filter(tag => tag !== tagname));
+    } else {
+      // push that to array
+      setSelectedTags([...selectedTags, tagname]);
+    }
+  };
+
   return (
     <Animated.View
       style={[styles.wrapper, {transform: [{translateY: bottomValue}]}]}>
-      <TouchableWithoutFeedback onPress={() => setFooterOpen(false)}>
+      <TouchableWithoutFeedback onPress={() => setTagListOpen(false)}>
         <View style={styles.remaining}></View>
       </TouchableWithoutFeedback>
       <View style={[styles.container]}>
         <FlatList
           style={styles.flatlist}
           keyExtractor={(item, index) => index}
-          data={tags}
+          data={dummyTags}
           renderItem={({item}) => {
             return (
-              <TouchableOpacity activeOpacity={0.5}>
-                <View style={styles.tag}>
-                  <Icon
-                    style={styles.icon}
-                    name="book-outline"
-                    color="#636363"
-                    size={15}></Icon>
-                  <Text style={styles.tagtext}> {item.tagname} </Text>
-                </View>
+              <TouchableOpacity onPress={() => {}} activeOpacity={0.5}>
+                <CheckBox
+                  style={[{flex: 1, padding: 10}]}
+                  onClick={() => handleCheckbox(item.tagname)}
+                  isChecked={selectedTags.includes(item.tagname)}
+                  leftText={item.tagname}
+                />
               </TouchableOpacity>
             );
           }}
         />
-        {/*     <TouchableOpacity style={{width: '90%'}} activeOpacity={0.5}>
+        <TouchableOpacity style={{width: '90%'}} activeOpacity={0.5}>
           <View style={styles.newtagbtncontainer}>
             <Icon
               style={[styles.icon, {color: 'white'}]}
@@ -77,7 +99,7 @@ function BottomDrawer({tags, isFooterOpen, setFooterOpen}) {
               size={18}></Icon>
             <Text style={[styles.newtag, {color: 'white'}]}>Add new label</Text>
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </Animated.View>
   );
@@ -88,11 +110,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    /* backgroundColor: 'green', */
+    /*    backgroundColor: 'green', */
   },
   remaining: {
     flex: 1,
-    /*     backgroundColor: 'grey', */
+    /* backgroundColor: 'red', */
   },
   container: {
     position: 'absolute',
@@ -153,4 +175,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BottomDrawer;
+export default TagList;

@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@ant-design/react-native": "^4.2.0",
     "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/native": "^5.9.4",
@@ -17,6 +18,7 @@
     "react": "17.0.1",
     "react-devtools": "^4.14.0",
     "react-native": "0.64.2",
+    "react-native-check-box": "^2.1.7",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-get-random-values": "^1.7.0",
     "react-native-reanimated": "^2.2.0",
@@ -31,6 +33,7 @@
     "@babel/runtime": "^7.14.8",
     "@react-native-community/eslint-config": "^3.0.0",
     "babel-jest": "^27.0.6",
+    "babel-plugin-import": "^1.13.3",
     "eslint": "^7.31.0",
     "jest": "^27.0.6",
     "lodash": "^4.17.21",

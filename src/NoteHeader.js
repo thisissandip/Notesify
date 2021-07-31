@@ -15,8 +15,9 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
 import {fetchNotes} from './redux/actions';
+import BottomDrawer from './BottomDrawer';
 
-function NoteHeader({saveData, noteid}) {
+function NoteHeader({saveData, noteid, setTagListOpen, noteToEdit}) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -43,11 +44,21 @@ function NoteHeader({saveData, noteid}) {
       <TouchableOpacity activeOpacity={0.3} onPress={() => handleBack()}>
         <Icon name="arrow-back-outline" size={23} color="#636363" />
       </TouchableOpacity>
-      {
-        <TouchableOpacity activeOpacity={0.3} onPress={() => deleteNote()}>
-          <Icon name="trash-outline" size={23} color="#636363" />
+      <View style={styles.rightContainer}>
+        <TouchableOpacity
+          activeOpacity={0.3}
+          onPress={() => setTagListOpen(true)}>
+          <Icon name="book-outline" size={23} color="#636363" />
         </TouchableOpacity>
-      }
+        {noteToEdit !== null && (
+          <TouchableOpacity
+            style={{marginLeft: 25}}
+            activeOpacity={0.3}
+            onPress={() => deleteNote()}>
+            <Icon name="trash-outline" size={23} color="#636363" />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 }
@@ -63,6 +74,10 @@ const styles = StyleSheet.create({
     paddingLeft: LEFT_HEADER_PADDING,
     paddingRight: RIGHT_HEADER_PADDING,
     /* backgroundColor: 'pink', */
+  },
+  rightContainer: {
+    display: 'flex',
+    flexDirection: 'row',
   },
 });
 

@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MasonryList from '@react-native-seoul/masonry-list';
+
 /**
  * Internal dependencies
  */

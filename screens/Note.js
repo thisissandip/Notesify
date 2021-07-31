@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -17,13 +17,13 @@ import {GlobalStyles} from '../src/GlobalStyles';
 import Layout from '../src/Layout';
 import NoteHeader from '../src/NoteHeader';
 import {LEFTPADDING, RIGHTPADDING} from '../src/constants';
-import {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {isEmpty} from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {v4 as uuidv4} from 'uuid';
 import {useSelector, useDispatch} from 'react-redux';
 import {fetchNotes} from '../src/redux/actions';
+import TagList from '../src/TagList';
 
 function Note({route}) {
   const {noteToEdit} = route.params;
@@ -65,6 +65,7 @@ function Note({route}) {
         id: NoteId,
         title,
         content: note,
+        tags: [],
       };
       let newallnotes = [];
       if (isEmpty(allnotes)) {
@@ -109,13 +110,22 @@ function Note({route}) {
     }
   };
 
+  // states for tag list drawer
+  const [isTagListOpen, setTagListOpen] = useState(false);
+
   return (
     <View>
       <Layout>
         <SafeAreaView>
-          <NoteHeader noteid={NoteId} saveData={saveData} />
+          <NoteHeader
+            setTagListOpen={setTagListOpen}
+            noteid={NoteId}
+            noteToEdit={noteToEdit}
+            saveData={saveData}
+          />
         </SafeAreaView>
         <ScrollView
+          bounces={false}
           style={styles.container}
           showsVerticalScrollIndicator={false}>
           <Title title={title} setTitle={setTitle} />
@@ -123,6 +133,7 @@ function Note({route}) {
           <View style={{height: 80}} />
         </ScrollView>
       </Layout>
+      <TagList isTagListOpen={isTagListOpen} setTagListOpen={setTagListOpen} />
     </View>
   );
 }
