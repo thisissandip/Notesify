@@ -38,9 +38,20 @@ function Home() {
 
   const notes = useSelector(state => state.noteR.notes);
 
+  // set local user on first launch
+  useEffect(() => {
+    const firstLaunch = async () => {
+      await AsyncStorage.setItem('local_user', 'true');
+    };
+
+    firstLaunch();
+  }, []);
+
   useEffect(() => {
     const getExistingNotes = async () => {
-      /* await AsyncStorage.removeItem('papr_notes'); */
+      /*       await AsyncStorage.removeItem('papr_notes');
+      await AsyncStorage.removeItem('papr_tags'); */
+
       const allnotesdata = await AsyncStorage.getItem('papr_notes');
       const allnotes = JSON.parse(allnotesdata);
 

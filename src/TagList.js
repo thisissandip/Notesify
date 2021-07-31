@@ -9,12 +9,17 @@ import {
   FlatList,
   Platform,
   Dimensions,
+  TextInput,
+  Button,
+  SafeAreaView,
+  Modal,
 } from 'react-native';
 import CheckBox from 'react-native-check-box';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {GlobalStyles} from './GlobalStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function TagList({isTagListOpen, setTagListOpen}) {
+function TagList({isTagListOpen, setTagListOpen, from}) {
   // Animation slide up and down
   const bottomValue = useRef(
     new Animated.Value(Dimensions.get('screen').height),
@@ -44,17 +49,40 @@ function TagList({isTagListOpen, setTagListOpen}) {
     }).start();
   };
 
-  // Dummy tags
+  // My tags
 
-  const dummyTags = [
-    {tagname: 'todos'},
-    {tagname: 'notes'},
-    {tagname: 'meetings'},
-  ];
+  // search tag states
+
+  const [searchInp, setSearchInp] = useState('');
+  const [tags, setTags] = useState([]);
+  const [searchedTags, setSearchedTags] = useState([]);
+
+  useEffect(() => {
+    getMyTags();
+  }, []);
+
+  const getMyTags = async () => {
+    const alltagsdata = await AsyncStorage.getItem('papr_tags');
+    const alltags = JSON.parse(alltagsdata);
+    setTags([...alltags]);
+    setSearchedTags([...alltags]);
+  };
+
+  useEffect(() => {
+    let resultags = tags.filter(tag => tag.tagname.includes(searchInp));
+    setSearchedTags([...resultags]);
+  }, [searchInp]);
+
+  const updateTags = async () => {
+    const newtags = [...tags, {tagname: searchInp}];
+    await AsyncStorage.setItem('papr_tags', JSON.stringify(newtags));
+    setSearchInp('');
+    getMyTags();
+  };
 
   // array of selected tags
 
-  const [selectedTags, setSelectedTags] = useState(['todos']);
+  const [selectedTags, setSelectedTags] = useState(['']);
 
   const handleCheckbox = tagname => {
     if (selectedTags.includes(tagname)) {
@@ -67,41 +95,90 @@ function TagList({isTagListOpen, setTagListOpen}) {
   };
 
   return (
-    <Animated.View
-      style={[styles.wrapper, {transform: [{translateY: bottomValue}]}]}>
-      <TouchableWithoutFeedback onPress={() => setTagListOpen(false)}>
-        <View style={styles.remaining}></View>
-      </TouchableWithoutFeedback>
-      <View style={[styles.container]}>
-        <FlatList
-          style={styles.flatlist}
-          keyExtractor={(item, index) => index}
-          data={dummyTags}
-          renderItem={({item}) => {
-            return (
-              <TouchableOpacity onPress={() => {}} activeOpacity={0.5}>
-                <CheckBox
-                  style={[{flex: 1, padding: 10}]}
-                  onClick={() => handleCheckbox(item.tagname)}
-                  isChecked={selectedTags.includes(item.tagname)}
-                  leftText={item.tagname}
+    <>
+      <Animated.View
+        style={[styles.wrapper, {transform: [{translateY: bottomValue}]}]}>
+        <TouchableWithoutFeedback onPress={() => setTagListOpen(false)}>
+          <View style={styles.remaining}></View>
+        </TouchableWithoutFeedback>
+        <View style={[styles.container]}>
+          {searchedTags.length > 0 ? (
+            <FlatList
+              style={styles.flatlist}
+              keyExtractor={(item, index) => index}
+              data={searchedTags}
+              renderItem={({item}) => {
+                if (from === 'home') {
+                  return (
+                    <TouchableOpacity activeOpacity={0.5}>
+                      <View style={styles.tag}>
+                        <Icon
+                          style={styles.icon}
+                          name="book-outline"
+                          color="#636363"
+                          size={15}></Icon>
+                        <Text style={styles.tagtext}> {item.tagname} </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                } else {
+                  return (
+                    <TouchableOpacity onPress={() => {}} activeOpacity={0.5}>
+                      <CheckBox
+                        style={[{flex: 1, padding: 10}]}
+                        onClick={() => handleCheckbox(item.tagname)}
+                        isChecked={selectedTags.includes(item.tagname)}
+                        leftText={item.tagname}
+                      />
+                    </TouchableOpacity>
+                  );
+                }
+              }}
+            />
+          ) : searchInp ? (
+            <TouchableOpacity
+              style={{width: '89%'}}
+              onPress={() => updateTags()}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  width: '100%',
+                  padding: 5,
+                  marginBottom: 5,
+                }}>
+                <Icon
+                  style={{marginRight: 2}}
+                  size={20}
+                  name="add-outline"
+                  color="#636363"
                 />
-              </TouchableOpacity>
-            );
-          }}
-        />
-        <TouchableOpacity style={{width: '90%'}} activeOpacity={0.5}>
-          <View style={styles.newtagbtncontainer}>
-            <Icon
-              style={[styles.icon, {color: 'white'}]}
-              name="add-outline"
-              color="#636363"
-              size={18}></Icon>
-            <Text style={[styles.newtag, {color: 'white'}]}>Add new label</Text>
+                <Text> Create tag - {searchInp} </Text>
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+
+          <View style={{width: '90%', alignItems: 'center'}}>
+            <View style={styles.newtagbtncontainer}>
+              <Icon
+                style={[styles.icon]}
+                name="search-outline"
+                color="#636363"
+                size={20}></Icon>
+              <TextInput
+                autoCapitalize="none"
+                value={searchInp}
+                style={styles.searchInp}
+                onChangeText={value => setSearchInp(value)}
+                placeholder="Search or Create Tags"
+              />
+            </View>
           </View>
-        </TouchableOpacity>
-      </View>
-    </Animated.View>
+        </View>
+      </Animated.View>
+    </>
   );
 }
 
@@ -137,7 +214,7 @@ const styles = StyleSheet.create({
     elevation: 0,
     borderWidth: Platform.OS === 'android' ? 1 : 0,
     borderColor: '#ccc',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
   },
   flatlist: {
     width: '90%',
@@ -161,18 +238,24 @@ const styles = StyleSheet.create({
   newtagbtncontainer: {
     flexDirection: 'row',
     position: 'relative',
-    width: '100%',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 5,
+    width: '98%',
+    borderRadius: 6,
+    padding: 8,
+    marginBottom: 6,
     marginTop: 5,
-    backgroundColor: '#000',
-    borderColor: '#404040',
+    borderColor: '#a1a1a1',
     borderWidth: 1,
   },
   icon: {
-    marginRight: 5,
+    marginRight: 10,
+  },
+  searchInp: {
+    width: '100%',
+    fontFamily: GlobalStyles.customFontFamily.fontFamily,
+    color: '#404040',
   },
 });
 
 export default TagList;
+
+/* Modal */

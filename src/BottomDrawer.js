@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -12,8 +12,22 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {GlobalStyles} from './GlobalStyles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function BottomDrawer({tags, isFooterOpen, setFooterOpen}) {
+function BottomDrawer({isFooterOpen, setFooterOpen}) {
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    getMyTags();
+  }, []);
+
+  const getMyTags = async () => {
+    const alltagsdata = await AsyncStorage.getItem('papr_tags');
+    const alltags = JSON.parse(alltagsdata);
+    setTags([...alltags]);
+  };
+
+  // animation
   const bottomValue = useRef(
     new Animated.Value(Dimensions.get('screen').height),
   ).current;

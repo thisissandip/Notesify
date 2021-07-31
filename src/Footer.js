@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {GlobalStyles} from './GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
-import BottomDrawer from './BottomDrawer';
+import TagList from './TagList';
 import {useNavigation} from '@react-navigation/native';
 import {
   LEFTPADDING,
@@ -19,15 +19,10 @@ function Footer() {
 
   const notes = useSelector(state => state.noteR.notes);
 
-  const [isFooterOpen, setFooterOpen] = useState(false);
-  const dummyTags = [
-    {tagname: 'todos'},
-    {tagname: 'notes'},
-    {tagname: 'meetings'},
-  ];
+  const [isTagListOpen, setTagListOpen] = useState(false);
 
   const OpenBottomDrawer = () => {
-    setFooterOpen(true);
+    setTagListOpen(true);
   };
 
   return (
@@ -61,10 +56,10 @@ function Footer() {
           </View>
         </TouchableOpacity>
       </View>
-      <BottomDrawer
-        isFooterOpen={isFooterOpen}
-        setFooterOpen={setFooterOpen}
-        tags={dummyTags}
+      <TagList
+        isTagListOpen={isTagListOpen}
+        setTagListOpen={setTagListOpen}
+        from="home"
       />
     </>
   );
