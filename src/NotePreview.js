@@ -37,7 +37,7 @@ function NotePreview({note}) {
 const styles = StyleSheet.create({
   note: {
     width: NOTE_PREVIEW_WIDTH,
-    marginBottom: 13,
+    marginBottom: 18,
     height: 'auto',
     maxHeight: NOTE_PREVIEW_MAX_HEIGHT,
     overflow: 'hidden',
