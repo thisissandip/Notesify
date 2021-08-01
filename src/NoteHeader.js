@@ -23,7 +23,6 @@ function NoteHeader({saveData, noteid, setTagListOpen, noteToEdit}) {
 
   // save on back button from header
   const handleBack = () => {
-    saveData();
     navigation.goBack();
   };
 

@@ -19,7 +19,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {GlobalStyles} from './GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function TagList({isTagListOpen, setTagListOpen, from}) {
+function TagList({
+  isTagListOpen,
+  setTagListOpen,
+  from,
+  selectedTags,
+  setSelectedTags,
+}) {
   // Animation slide up and down
   const bottomValue = useRef(
     new Animated.Value(Dimensions.get('screen').height),
@@ -66,6 +72,9 @@ function TagList({isTagListOpen, setTagListOpen, from}) {
     const alltags = JSON.parse(alltagsdata);
     setTags([...alltags]);
     setSearchedTags([...alltags]);
+
+    // selected tags for the note
+    //setSelectedTags([...alltags]);
   };
 
   useEffect(() => {
@@ -80,10 +89,6 @@ function TagList({isTagListOpen, setTagListOpen, from}) {
     getMyTags();
   };
 
-  // array of selected tags
-
-  const [selectedTags, setSelectedTags] = useState(['']);
-
   const handleCheckbox = tagname => {
     if (selectedTags.includes(tagname)) {
       // remove
@@ -93,6 +98,10 @@ function TagList({isTagListOpen, setTagListOpen, from}) {
       setSelectedTags([...selectedTags, tagname]);
     }
   };
+
+  useEffect(() => {
+    console.log('tags', selectedTags);
+  }, [selectedTags]);
 
   return (
     <>
@@ -170,6 +179,7 @@ function TagList({isTagListOpen, setTagListOpen, from}) {
               <TextInput
                 autoCapitalize="none"
                 value={searchInp}
+                maxLength={30}
                 style={styles.searchInp}
                 onChangeText={value => setSearchInp(value)}
                 placeholder="Search or Create Tags"
@@ -217,7 +227,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 1)',
   },
   flatlist: {
-    width: '90%',
+    width: '89%',
+    marginBottom: 5,
   },
   tag: {
     flexDirection: 'row',
@@ -245,6 +256,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderColor: '#a1a1a1',
     borderWidth: 1,
+    overflow: 'hidden',
   },
   icon: {
     marginRight: 10,
@@ -253,6 +265,7 @@ const styles = StyleSheet.create({
     width: '100%',
     fontFamily: GlobalStyles.customFontFamily.fontFamily,
     color: '#404040',
+    overflow: 'hidden',
   },
 });
 

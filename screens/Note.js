@@ -41,6 +41,12 @@ function Note({route}) {
 
   const navigation = useNavigation();
 
+  // array of selected tags
+
+  const [selectedTags, setSelectedTags] = useState(
+    noteToEdit.tags ? noteToEdit.tags : [],
+  );
+
   useEffect(() => {
     navigation.addListener('beforeRemove', saveData);
     AppState.addEventListener('change', handleAppStateChange);
@@ -49,7 +55,7 @@ function Note({route}) {
       navigation.removeListener('beforeRemove', saveData);
       AppState.removeEventListener('change', handleAppStateChange);
     };
-  }, [note, title]);
+  }, [note, title, selectedTags]);
 
   useEffect(() => {
     console.warn(notes);
@@ -65,8 +71,10 @@ function Note({route}) {
         id: NoteId,
         title,
         content: note,
-        tags: [],
+        tags: [...selectedTags],
       };
+
+      console.log('selected', currentNote);
       let newallnotes = [];
       if (isEmpty(allnotes)) {
         // if no notes are there then save the first note
@@ -92,6 +100,7 @@ function Note({route}) {
                 ...item,
                 title: title,
                 content: note,
+                tags: [...selectedTags],
               };
             }
           });
@@ -133,7 +142,12 @@ function Note({route}) {
           <View style={{height: 80}} />
         </ScrollView>
       </Layout>
-      <TagList isTagListOpen={isTagListOpen} setTagListOpen={setTagListOpen} />
+      <TagList
+        isTagListOpen={isTagListOpen}
+        setTagListOpen={setTagListOpen}
+        selectedTags={selectedTags}
+        setSelectedTags={setSelectedTags}
+      />
     </View>
   );
 }
