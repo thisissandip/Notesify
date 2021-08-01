@@ -18,6 +18,7 @@ import CheckBox from 'react-native-check-box';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {GlobalStyles} from './GlobalStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
 function TagList({
   isTagListOpen,
@@ -26,6 +27,8 @@ function TagList({
   selectedTags,
   setSelectedTags,
 }) {
+  const navigation = useNavigation();
+
   // Animation slide up and down
   const bottomValue = useRef(
     new Animated.Value(Dimensions.get('screen').height),
@@ -119,7 +122,17 @@ function TagList({
               renderItem={({item}) => {
                 if (from === 'home') {
                   return (
-                    <TouchableOpacity activeOpacity={0.5}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate('NoteWithTags', {
+                          tagname: item.tagname,
+                        });
+
+                        setTimeout(() => {
+                          setTagListOpen(false);
+                        }, 300);
+                      }}
+                      activeOpacity={0.5}>
                       <View style={styles.tag}>
                         <Icon
                           style={styles.icon}
@@ -132,7 +145,7 @@ function TagList({
                   );
                 } else {
                   return (
-                    <TouchableOpacity onPress={() => {}} activeOpacity={0.5}>
+                    <TouchableOpacity activeOpacity={0.5}>
                       <CheckBox
                         style={[{flex: 1, padding: 10}]}
                         onClick={() => handleCheckbox(item.tagname)}

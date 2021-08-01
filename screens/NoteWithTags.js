@@ -32,51 +32,50 @@ import {
   FOOTER_HEIGHT,
 } from '../src/constants';
 
-function Home() {
+function NoteWithTags({route}) {
+  const {tagname} = route.params;
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const notes = useSelector(state => state.noteR.notes);
 
+  const [notesToDisplay, setNotesToDisplay] = useState([]);
   useEffect(() => {
-    const getExistingNotes = async () => {
-      /*       await AsyncStorage.removeItem('papr_notes');
-      await AsyncStorage.removeItem('papr_tags'); */
-
-      const allnotesdata = await AsyncStorage.getItem('papr_notes');
-      const allnotes = JSON.parse(allnotesdata);
-
-      if (!isEmpty(allnotes)) {
-        dispatch(fetchNotes());
+    let notewiththistag = notes.filter(note => {
+      if (note.tags.includes(tagname)) {
+        return note;
       }
-    };
+    });
 
-    getExistingNotes();
-  }, [navigation]);
-
-  useEffect(() => {
-    console.log('notes', notes);
+    setNotesToDisplay(notewiththistag);
   }, [notes]);
 
   return (
     <View>
       <Layout>
-        {isEmpty(notes) ? (
+        {isEmpty(notesToDisplay) ? (
           <>
             <SafeAreaView>
-              <Header text="papr" />
+              <Header text={`#${tagname}`} />
             </SafeAreaView>
             <View style={styles.container}>
-              <AddNoteCard />
+              <Text
+                style={{
+                  fontFamily: GlobalStyles.customFontFamily.fontFamily,
+                  fontWeight: '400',
+                }}>
+                You don't have any papr with #{tagname}
+              </Text>
+              {/*   <AddNoteCard /> */}
             </View>
           </>
         ) : (
           <View style={styles.flatlist_container}>
             <SafeAreaView>
               <FlatList
-                ListHeaderComponent={() => <Header text="papr" />}
+                ListHeaderComponent={() => <Header text={`#${tagname}`} />}
                 contentContainerStyle={{alignItems: 'center'}}
-                data={notes.reverse()}
+                data={notesToDisplay.reverse()}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item}) => <NotePreview note={item} />}
                 bounces={false}
@@ -87,7 +86,6 @@ function Home() {
           </View>
         )}
       </Layout>
-      <Footer />
     </View>
   );
 }
@@ -113,4 +111,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default NoteWithTags;

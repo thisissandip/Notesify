@@ -29,6 +29,7 @@ import {LIGHT_BG_COLOR} from './src/constants';
 enableScreens();
 import Home from './screens/Home';
 import Note from './screens/Note';
+import NoteWithTags from './screens/NoteWithTags';
 
 import {Provider} from 'react-redux';
 
@@ -61,6 +62,11 @@ const App = () => {
           <Stack.Screen
             name="Note"
             component={Note}
+            options={{header: () => null}}
+          />
+          <Stack.Screen
+            name="NoteWithTags"
+            component={NoteWithTags}
             options={{header: () => null}}
           />
         </Stack.Navigator>

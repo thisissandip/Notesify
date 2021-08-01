@@ -44,7 +44,7 @@ function Note({route}) {
   // array of selected tags
 
   const [selectedTags, setSelectedTags] = useState(
-    noteToEdit.tags ? noteToEdit.tags : [],
+    noteToEdit?.tags ? noteToEdit.tags : [],
   );
 
   useEffect(() => {
