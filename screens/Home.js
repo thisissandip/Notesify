@@ -75,7 +75,8 @@ function Home() {
             <SafeAreaView>
               <FlatList
                 ListHeaderComponent={() => <Header text="papr" />}
-                contentContainerStyle={{alignItems: 'center'}}
+                ListHeaderComponentStyle={{width: '100%'}}
+                contentContainerStyle={{width: '100%', alignItems: 'center'}}
                 data={notes.reverse()}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item}) => <NotePreview note={item} />}

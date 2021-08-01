@@ -10,6 +10,7 @@ import {
   TextInput,
   Platform,
   AppState,
+  Keyboard,
   Dimensions,
   BackHandler,
 } from 'react-native';
@@ -57,9 +58,27 @@ function Note({route}) {
     };
   }, [note, title, selectedTags]);
 
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
   useEffect(() => {
     console.warn(notes);
     console.warn('edit', noteToEdit);
+
+    Keyboard.addListener('keyboardWillShow', e => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    Keyboard.addListener('keyboardWillHide', e => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      Keyboard.addListener('keyboardWillShow', e => {
+        setKeyboardHeight(e.endCoordinates.height);
+      });
+      Keyboard.addListener('keyboardWillHide', e => {
+        setKeyboardHeight(0);
+      });
+    };
   }, []);
 
   const saveData = async () => {
@@ -143,6 +162,7 @@ function Note({route}) {
         </ScrollView>
       </Layout>
       <TagList
+        keyboardHeight={keyboardHeight}
         isTagListOpen={isTagListOpen}
         setTagListOpen={setTagListOpen}
         selectedTags={selectedTags}

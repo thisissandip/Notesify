@@ -10,6 +10,7 @@ import {
   Platform,
   Dimensions,
   TextInput,
+  Keyboard,
   Button,
   SafeAreaView,
   Modal,
@@ -26,6 +27,7 @@ function TagList({
   from,
   selectedTags,
   setSelectedTags,
+  keyboardHeight,
 }) {
   const navigation = useNavigation();
 
@@ -33,14 +35,6 @@ function TagList({
   const bottomValue = useRef(
     new Animated.Value(Dimensions.get('screen').height),
   ).current;
-
-  const SlideUp = () => {
-    Animated.timing(bottomValue, {
-      toValue: 0,
-      duration: 0.4 * 1000,
-      useNativeDriver: true,
-    }).start();
-  };
 
   useEffect(() => {
     if (isTagListOpen) {
@@ -50,13 +44,44 @@ function TagList({
     }
   }, [isTagListOpen]);
 
+  const SlideUp = () => {
+    Animated.timing(bottomValue, {
+      toValue: 0,
+      duration: 0.4 * 1000,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const SlideDown = () => {
     Animated.timing(bottomValue, {
       toValue: Dimensions.get('screen').height,
       duration: 0.5 * 1000,
       useNativeDriver: true,
     }).start();
+    Keyboard.dismiss();
+    setTimeout(() => {
+      setSearchInp('');
+    }, 300);
   };
+
+  // keyboard listerner
+
+  useEffect(() => {
+    console.log('keyheift', keyboardHeight);
+    if (keyboardHeight > 0 && isTagListOpen) {
+      Animated.timing(bottomValue, {
+        toValue: -keyboardHeight,
+        duration: 350,
+        useNativeDriver: true,
+      }).start();
+    } else if (keyboardHeight === 0 && isTagListOpen) {
+      Animated.timing(bottomValue, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [keyboardHeight]);
 
   // My tags
 
@@ -127,7 +152,6 @@ function TagList({
                         navigation.navigate('NoteWithTags', {
                           tagname: item.tagname,
                         });
-
                         setTimeout(() => {
                           setTagListOpen(false);
                         }, 300);
@@ -214,7 +238,7 @@ const styles = StyleSheet.create({
   },
   remaining: {
     flex: 1,
-    /* backgroundColor: 'red', */
+    /*   backgroundColor: 'red', */
   },
   container: {
     position: 'absolute',

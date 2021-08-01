@@ -28,12 +28,14 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: HEADER_HEIGHT,
-    marginBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
     paddingLeft: LEFTPADDING,
+    /* paddingLeft: 6, */
     paddingRight: RIGHTPADDING,
     backgroundColor: LIGHT_BG_COLOR,
+    /* backgroundColor: 'red', */
+    marginBottom: 15,
   },
   text: {
     fontFamily: GlobalStyles.customFontFamily.fontFamily,

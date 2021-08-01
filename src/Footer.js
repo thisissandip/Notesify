@@ -1,5 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Keyboard,
+  KeyboardAvoidingView,
+} from 'react-native';
 import {GlobalStyles} from './GlobalStyles';
 import Icon from 'react-native-vector-icons/Ionicons';
 import TagList from './TagList';
@@ -24,6 +32,26 @@ function Footer() {
   const OpenBottomDrawer = () => {
     setTagListOpen(true);
   };
+
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    Keyboard.addListener('keyboardWillShow', e => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    Keyboard.addListener('keyboardWillHide', e => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      Keyboard.addListener('keyboardWillShow', e => {
+        setKeyboardHeight(e.endCoordinates.height);
+      });
+      Keyboard.addListener('keyboardWillHide', e => {
+        setKeyboardHeight(0);
+      });
+    };
+  }, []);
 
   return (
     <>
@@ -52,11 +80,13 @@ function Footer() {
 
         <TouchableOpacity activeOpacity={0.3}>
           <View>
-            <Icon name="search-outline" size={30} color="#636363" />
+            <Icon name="person-circle-outline" size={30} color="#636363" />
           </View>
         </TouchableOpacity>
       </View>
+
       <TagList
+        keyboardHeight={keyboardHeight}
         isTagListOpen={isTagListOpen}
         setTagListOpen={setTagListOpen}
         from="home"
